@@ -1,7 +1,6 @@
 import pandas as pd
 from clearml import PipelineDecorator
-from sklearn import set_config
-set_config(transform_output='pandas')
+
 
 
 @PipelineDecorator.component(
@@ -43,6 +42,8 @@ def encode_comp(
     data: pd.DataFrame
 ):
     from preprocess import encode
+    from sklearn import set_config
+    set_config(transform_output='pandas')
     encoded_data = encode(data, 'day_of_week', 'time', 'category', 'booking_id')
     dataset_path = '../data/encoded_data'
     encoded_data.to_csv('../data/encoded_data', index=False)
