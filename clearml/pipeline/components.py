@@ -5,7 +5,9 @@ set_config(transform_output='pandas')
 
 
 @PipelineDecorator.component(
-        return_values=['data_path']
+        return_values=['data_path'],
+        repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
+        repo_branch='main'
 )
 def get_data_comp(
     name: str
@@ -17,7 +19,9 @@ def get_data_comp(
 
 @PipelineDecorator.component(
     return_values=['transformed_data'],
-    cache=True
+    cache=True,
+    repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
+    repo_branch='main'
 )
 def tranform_comp(
     data_path: str
@@ -30,7 +34,9 @@ def tranform_comp(
 
 @PipelineDecorator.component(
     return_values=['dataset_path'],
-    cache=True
+    cache=True,
+    repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
+    repo_branch='main'
 )
 def encode_comp(
     data: pd.DataFrame
@@ -44,7 +50,9 @@ def encode_comp(
 
 @PipelineDecorator.component(
     return_values=[None],
-    cache=True
+    cache=True,
+    repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
+    repo_branch='main'
 )
 def upload_dataset_comp(
     path: str,
