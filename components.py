@@ -51,7 +51,7 @@ def encode_comp(
 
 
 @PipelineDecorator.component(
-    return_values=[None],
+    return_values=['status'],
     cache=True,
     repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
     repo_branch='main'
@@ -72,4 +72,7 @@ def upload_dataset_comp(
         storage,
         parent
     )
+
+    status = 'Complete'
+    return status
     

@@ -22,7 +22,7 @@ def upload_data(
         name:str,
         project_name: str,
         storage: str,
-        parent: str=None
+        parent: str
 ):
     ds = Dataset.create(
     dataset_name=name,
@@ -70,7 +70,7 @@ def encode(
     verbose_feature_names_out=False
     )
     encodeed = col_transform.fit_transform(data).drop(drop_col, axis = 1)
-    dataset_path = 'encoded_data'
-    encodeed.to_csv('encoded_data', index=False)
+    dataset_path = 'encoded_data.csv'
+    encodeed.to_csv(dataset_path, index=False)
 
     return dataset_path
