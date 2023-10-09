@@ -12,7 +12,7 @@ set_config(transform_output='pandas')
 def get_data_comp(
     name: str
 ):
-    from fitness_package.preprocess import get_data
+    from preprocess import get_data
     data_path = get_data(name)
     return data_path
 
@@ -26,7 +26,7 @@ def get_data_comp(
 def tranform_comp(
     data_path: str
 ):
-    from fitness_package.preprocess import transform
+    from preprocess import transform
     data = pd.read_csv(data_path)
     transformed_data = transform(data, 'day_of_week', 'days_before')
     return transformed_data
@@ -41,7 +41,7 @@ def tranform_comp(
 def encode_comp(
     data: pd.DataFrame
 ):
-    from fitness_package.preprocess import encode
+    from preprocess import encode
     encoded_data = encode(data, 'day_of_week', 'time', 'category', 'booking_id')
     dataset_path = '../data/encoded_data'
     encoded_data.to_csv('../data/encoded_data', index=False)
@@ -62,7 +62,7 @@ def upload_dataset_comp(
     parent: str=None
 
 ):
-    from fitness_package.preprocess import upload_data
+    from preprocess import upload_data
     upload_data(
         path,
         name,
