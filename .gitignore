@@ -1,0 +1,6 @@
+Pipfile*
+.env
+data
+*.ipynb
+.DS_Store
+xgb_model
