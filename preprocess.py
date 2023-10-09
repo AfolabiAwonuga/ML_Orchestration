@@ -42,10 +42,10 @@ def transform(
         col_2: str
 ) -> pd.DataFrame:
     transformed_data = data.copy()
-    transformed_data['day_of_week'] = transformed_data['day_of_week'].apply(
+    transformed_data[col_1] = transformed_data[col_1].apply(
         lambda x: 'Wed' if x == 'Wednesday' else ('Fri' if x == 'Fri.' else x)
         )
-    transformed_data[col_1] = transformed_data[col_1].apply(lambda x: x.split(' ')[0])
+    transformed_data[col_2] = transformed_data[col_2].apply(lambda x: x.split(' ')[0])
     transformed_data[col_2] = transformed_data[col_2].astype('int')
 
     return transformed_data
