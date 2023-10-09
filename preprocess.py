@@ -70,5 +70,7 @@ def encode(
     verbose_feature_names_out=False
     )
     encodeed = col_transform.fit_transform(data).drop(drop_col, axis = 1)
+    dataset_path = 'encoded_data'
+    encodeed.to_csv('encoded_data', index=False)
 
-    return encodeed
+    return dataset_path
