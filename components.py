@@ -6,7 +6,7 @@ set_config(transform_output='pandas')
 
 @PipelineDecorator.component(
         return_values=['data_path'],
-        repo='git@github.com:AfolabiAwonuga/ML_Orchestration/clearml.git',
+        repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
         repo_branch='main'
 )
 def get_data_comp(
@@ -26,6 +26,7 @@ def get_data_comp(
 def tranform_comp(
     data_path: str
 ):
+    import pandas as pd
     from preprocess import transform
     data = pd.read_csv(data_path)
     transformed_data = transform(data, 'day_of_week', 'days_before')
