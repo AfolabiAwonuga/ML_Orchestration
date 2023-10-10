@@ -4,7 +4,6 @@ from clearml import PipelineDecorator, Task
 from components import get_data_comp, tranform_comp, encode_comp, upload_dataset_comp
 load_dotenv()
 
-
 CLEARML_WEB_HOST = os.getenv("CLEARML_WEB_HOST")
 CLEARML_API_HOST = os.getenv("CLEARML_API_HOST")
 CLEARML_FILES_HOST = os.getenv("CLEARML_FILES_HOST")
