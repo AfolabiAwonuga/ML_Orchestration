@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from clearml import PipelineDecorator, Task
-from components import get_data_comp, tranform_comp, encode_comp, upload_dataset_comp
+from fitness_package.components import get_data_comp, tranform_comp, encode_comp, upload_dataset_comp
 load_dotenv()
 
 CLEARML_WEB_HOST = os.getenv("CLEARML_WEB_HOST")
