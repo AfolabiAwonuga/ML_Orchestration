@@ -4,3 +4,4 @@ data
 *.ipynb
 .DS_Store
 xgb_model
+__pycache__
