@@ -2,15 +2,16 @@ import os
 import pandas as pd
 from clearml import Dataset
 from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
 
 def get_data(
-        name: str
+        dataset_name: str
 
 ):
     ds_get = Dataset.get(
-    dataset_name=name,
+    dataset_name=dataset_name,
 ).get_local_copy()
     data_path = os.path.join(ds_get, os.listdir(ds_get)[0])
 
@@ -70,7 +71,27 @@ def encode(
     verbose_feature_names_out=False
     )
     encodeed = col_transform.fit_transform(data).drop(drop_col, axis = 1)
-    dataset_path = 'encoded_data.csv'
+    dataset_path = '../data/encoded_data.csv'
     encodeed.to_csv(dataset_path, index=False)
 
     return dataset_path
+
+
+def split_data(
+        data: pd.DataFrame,
+        target: str
+):
+    
+    X = data.drop(target, axis=1)
+    y = data[target]
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, stratify=y, random_state=42
+    )
+
+    # train = pd.concat([X_train, y_train], axis=1, ignore_index=True)
+    # test = pd.concat([X_test, y_test], axis=1, ignore_index=True)
+    # train_path = '../data/train.csv'
+    # test_path = '../data/test.csv'
+    # train.to_csv(train_path, index=False)
+    # test.to_csv(test_path, index=False)
+    return X_train, X_test, y_train, y_test

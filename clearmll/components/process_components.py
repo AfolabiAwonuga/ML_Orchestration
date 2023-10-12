@@ -9,10 +9,10 @@ from clearml import PipelineDecorator
         repo_branch='main'
 )
 def get_data_comp(
-    name: str
+    dataset_name: str
 ):
     from clearmll.fitness_package.preprocess import get_data
-    data_path = get_data(name)
+    data_path = get_data(dataset_name)
     return data_path
 
 
@@ -55,7 +55,7 @@ def encode_comp(
 @PipelineDecorator.component(
     return_values=['status'],
     cache=True,
-    docker= 'folabinuga/fitness_package',
+    # docker= 'folabinuga/fitness_package',
     repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
     repo_branch='main'
 )
@@ -79,3 +79,21 @@ def upload_dataset_comp(
     status = 'Complete'
     return status
     
+
+@PipelineDecorator.component(
+    return_values=["X_train", "X_test", "y_train", "y_test"],
+    cache=True,
+    # docker= 'folabinuga/fitness_package',
+    repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
+    repo_branch='main'
+)
+def split_dataset_comp(
+    data_path: str,
+    target: str
+):
+    import pandas as pd 
+    from clearmll.fitness_package.preprocess import split_data
+    data = pd.read_csv(data_path)
+    X_train, X_test, y_train, y_test = split_data(data, target)
+
+    return X_train, X_test, y_train, y_test

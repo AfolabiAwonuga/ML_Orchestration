@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
 from clearml import PipelineDecorator, Task
-from components import get_data_comp, tranform_comp, encode_comp, upload_dataset_comp
+from clearmll.components.train_components import train_comp, eval_comp 
+from clearmll.components.process_components import get_data_comp, split_dataset_comp
 load_dotenv()
 
 CLEARML_WEB_HOST = os.getenv("CLEARML_WEB_HOST")
@@ -15,26 +16,22 @@ AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION")
 
 
 @PipelineDecorator.pipeline(name="transform pipeline", project="fitness_project")
-def pipeline(
-    name: str,
-    project_name: str,
-    storage: str,
-    parent: str=None 
+def train_pipeline(
+    dataset_name: str,
+    target: str,
+    model_name: str,
 ):
-    step_1 = get_data_comp(name)
-    step_2 = tranform_comp(step_1)
-    step_3 = encode_comp(step_2)
-    step_4 = upload_dataset_comp(step_3, name, project_name, storage, parent)
-
-    # return accuracy
+    get_data_path = get_data_comp(dataset_name)
+    X_train, X_test, y_train, y_test = split_dataset_comp(get_data_path, target)
+    trained_model = train_comp(model_name, X_train, y_train)
+    evaluate = eval_comp(trained_model, X_test, y_test)
 
 
 if __name__ == "__main__":
     # PipelineDecorator.set_default_execution_queue('default')
     PipelineDecorator.run_locally()
-    pipeline(
+    train_pipeline(
          'fitness_class', 
-         'fitness_project',
-         's3://sagemaker-practice-bucket-nuga',
-         'bd4e0541f4db4821b37d57a4ea0489ca'
+         'attended',
+         'knn',
         )
