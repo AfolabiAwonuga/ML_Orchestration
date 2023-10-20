@@ -9,10 +9,15 @@ from clearml import PipelineDecorator
         repo_branch='main'
 )
 def get_data_comp(
-    dataset_name: str
-):
+    dataset_name: str,
+    pattern: str
+) -> str:
+    '''
+    ClearML pipeline component implementing get_data.
+    '''
+    
     from clearmll.fitness_package.preprocess import get_data
-    data_path = get_data(dataset_name)
+    data_path = get_data(dataset_name, pattern)
     return data_path
 
 
@@ -25,7 +30,11 @@ def get_data_comp(
 )
 def tranform_comp(
     data_path: str
-):
+) -> pd.DataFrame:
+    '''
+    ClearML pipeline component implementing transform.
+    '''
+    
     import pandas as pd
     from clearmll.fitness_package.preprocess import transform
     data = pd.read_csv(data_path)
@@ -41,15 +50,32 @@ def tranform_comp(
     repo_branch='main'
 )
 def encode_comp(
-    data: pd.DataFrame
-):
+    data: pd.DataFrame,
+    kind: str
+) -> str:
+    '''
+    ClearML pipeline component implementing encode.
+    '''
+    
     from clearmll.fitness_package.preprocess import encode
     from sklearn import set_config
     set_config(transform_output='pandas')
-    encoded_data = encode(data, 'day_of_week', 'time', 'category', 'booking_id')
-    # dataset_path = '../data/encoded_data'
-    # encoded_data.to_csv('../data/encoded_data', index=False)
-    return encoded_data
+    path = encode(
+        data, 
+        'day_of_week', 
+        'time', 'category', 
+        'booking_id', 
+        [
+            'months_as_member', 
+            'weight', 
+            'days_before', 
+            'day_of_week', 
+            'time', 
+            'attended'
+        ], 
+        kind
+    )
+    return path
 
 
 @PipelineDecorator.component(
@@ -66,7 +92,11 @@ def upload_dataset_comp(
     storage: str,
     parent: str=None
 
-):
+) -> str:
+    '''
+    ClearML pipeline component implementing upload_data.
+    '''
+    
     from clearmll.fitness_package.preprocess import upload_data
     upload_data(
         path,
@@ -90,7 +120,11 @@ def upload_dataset_comp(
 def split_dataset_comp(
     data_path: str,
     target: str
-):
+) -> tuple:
+    '''
+    ClearML pipeline component implementing split_data.
+    '''
+
     import pandas as pd 
     from clearmll.fitness_package.preprocess import split_data
     data = pd.read_csv(data_path)

@@ -6,42 +6,59 @@ from clearml import PipelineDecorator
 
 @PipelineDecorator.component(
         return_values=['model'],
-        # docker= 'folabinuga/fitness_package',
         repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
-        repo_branch='main'
+        repo_branch='main',
 )
 def train_comp(
     model_name: str,
     X_train: pd.DataFrame,
-    y_train: pd.DataFrame
-):
-    from clearmll.fitness_package.train import xgb, svm, knn
+    y_train: pd.Series
+) -> BaseEstimator:
+    '''
+    ClearML pipeline component implementing training a specified model.
+    '''
+    import xgboost as xgb
+    from joblib import dump
+    from clearml import Task
+    from clearmll.fitness_package.train import train_xgb, train_svm, train_knn, train_lr
+    task = Task.current_task()
+    task.output_uri = 'https://files.clear.ml'
     if model_name == 'xgb':
-        model = xgb(X_train, y_train)
+        model = train_xgb(X_train, y_train)
+        dump(model, filename="clearmll/models/xgb-model.pkl", compress=9)
 
     elif model_name == 'svm':
-        model = svm(X_train, y_train)
-
+        model = train_svm(X_train, y_train)
+        dump(model, filename="clearmll/models/svm-model.pkl", compress=9)
+    
+    elif model_name == 'lr':
+        model = train_lr(X_train, y_train)
+        dump(model, filename="clearmll/models/lr-model.pkl", compress=9)
+        
     else:
-        model = knn(X_train, y_train)
+        model = train_knn(X_train, y_train)
+        dump(model, filename="clearmll/models/knn-model.pkl", compress=9)
 
     return model
 
 
 @PipelineDecorator.component(
         return_values=['y_pred', 'accuracy', 'precision', 'recall', 'f1', 'matthews'],
-        # docker= 'folabinuga/fitness_package',
         repo='git@github.com:AfolabiAwonuga/ML_Orchestration.git',
         repo_branch='main'
 )
 def eval_comp(
+    model_name: str,
     model: Type[BaseEstimator],
     X_test: pd.DataFrame,
     y_test: pd.DataFrame
-):
-    
+) -> tuple:
+    '''
+    ClearML pipeline component evaluating model.
+    '''
+
     from clearmll.fitness_package.train import evaluate
-    y_pred, accuracy, precision, recall, f1, matthews = evaluate(model, X_test, y_test)
+    y_pred, accuracy, precision, recall, f1, matthews = evaluate(model_name, model, X_test, y_test)
     return y_pred, accuracy, precision, recall, f1, matthews
 
 

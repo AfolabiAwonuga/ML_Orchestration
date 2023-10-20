@@ -1,7 +1,25 @@
 Pipfile*
 .env
 data
-*.ipynb
+# *.ipynb
 .DS_Store
 xgb_model
 __pycache__
+models
+knn_pipeline.py
+svm_pipeline.py
+example.env
+docker-compose-triton-gpu.yml
+docker-compose-triton.yml
+docs
+examples
+engines
+clearmll/clearml-serving/clearml_serving/preprocess
+clearmll/clearml-serving/.gitignore
+clearmll/clearml-serving/LICENSE
+clearmll/clearml-serving/README.md
+clearmll/clearml-serving/requirements.txt
+clearmll/check.ipynb
+clearmll/experiment_management.ipynb
+clearmll/task.ipynb
+clearmll/clearml-serving/setup.py

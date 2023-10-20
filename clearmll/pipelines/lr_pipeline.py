@@ -5,6 +5,7 @@ from clearmll.components.train_components import train_comp, eval_comp
 from clearmll.components.process_components import get_data_comp, split_dataset_comp
 
 
+
 @PipelineDecorator.pipeline(name="train pipeline", project="fitness_project")
 def train_pipeline(
     dataset_name: str,
@@ -13,13 +14,13 @@ def train_pipeline(
     model_name: str,
 ):
     '''
-    ClearML pipeline trains XGBoost classifier.
+    ClearML pipeline trains Logistic regression classifier.
     '''
-   
+
     data_path = get_data_comp(dataset_name, pattern)
     X_train, X_test, y_train, y_test = split_dataset_comp(data_path, target)
     trained_model = train_comp(model_name, X_train, y_train)
-    y_pred, accuracy, precision, recall, f1, matthews = eval_comp(model_name, trained_model, X_test, y_test)
+    y_pred, accuracy, precision, recall, f1, matthews = eval_comp(trained_model, X_test, y_test)
 
     Task.current_task().get_logger().report_single_value(name="Accuracy", value=accuracy)
     Task.current_task().get_logger().report_single_value(name="Precision", value=precision)
@@ -38,5 +39,5 @@ if __name__ == "__main__":
          'fitness_class_train_data', 
          r'^encoded.*',
          'attended',
-         'xgb',
+         'lr',
         )
